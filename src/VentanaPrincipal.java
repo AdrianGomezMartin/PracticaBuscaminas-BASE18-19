@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,7 +13,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
+/***
+ * 
+ * @author adriangomez
+ *
+ */
 
 public class VentanaPrincipal {
 
