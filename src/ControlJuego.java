@@ -26,6 +26,7 @@ public class ControlJuego {
 		// Inicializamos una nueva partida
 		inicializarPartida();
 	}
+	// cambio
 
 	/**
 	 * M茅todo para generar un nuevo tablero de partida:
@@ -36,17 +37,27 @@ public class ControlJuego {
 	 *        minas guardan en el entero cu谩ntas minas hay alrededor de la celda
 	 */
 	public void inicializarPartida() {
-
-		// TODO: Repartir minas e inicializar puntaci髇. Si hubiese un tablero anterior,
-		// lo pongo todo a cero para inicializarlo.
-
-		// Al final del m閠odo hay que guardar el n鷐ero de minas para las casillas que
-		// no son mina:
+		int minasRepartidas = 0;
+		// TODO: Repartir minas e inicializar puntaci锟絥. Si hubiese un tablero
+		// anterior, lo pongo todo a cero para inicializarlo.
+		while (minasRepartidas < MINAS_INICIALES) {
+			int minai, minaj;
+			do {
+				minai = (int) Math.floor(Math.random() * 10);
+				minaj = (int) Math.floor(Math.random() * 10);
+			} while (tablero[minai][minaj] == MINA);
+			tablero[minai][minaj] = MINA;
+			minasRepartidas++;
+		}
+		// Al final del m锟絫odo hay que guardar el n锟絤ero de minas para las casillas
+		// que no son mina:
 		for (int i = 0; i < tablero.length; i++) {
+			System.out.println();
 			for (int j = 0; j < tablero[i].length; j++) {
-				if (tablero[i][j] != MINA) {
-					tablero[i][j] = calculoMinasAdjuntas(i, j);
-				}
+
+				 if (tablero[i][j] != MINA) { tablero[i][j] = calculoMinasAdjuntas(i, j); }
+
+				System.out.print(tablero[i][j] + "                 ");
 			}
 		}
 	}
@@ -57,12 +68,133 @@ public class ControlJuego {
 	 * mucho la i y la j valdr谩n LADO_TABLERO-1. Por lo tanto, como poco la i y la
 	 * j valdr谩n 0.
 	 * 
-	 * @param i: posici贸n vertical de la casilla a rellenar
-	 * @param j: posici贸n horizontal de la casilla a rellenar
+	 * @param i:
+	 *            posici贸n vertical de la casilla a rellenar
+	 * @param j:
+	 *            posici贸n horizontal de la casilla a rellenar
 	 * @return : El n煤mero de minas que hay alrededor de la casilla [i][j]
 	 **/
 	private int calculoMinasAdjuntas(int i, int j) {
+		int minas_alrededor = 0;
+		
+		/*
+		 * Si la fila no es la de arriba o la de abajo y la columna no sea derecha ni
+		 * izquierda
+		 */
+		if ((i > 0 && i < 9) && (j > 0 && j < 9)) {
+			if (tablero[i + 1][j + 1] == MINA)// posicion abajo a la derecha
+				minas_alrededor++;
+			if (tablero[i + 1][j] == MINA)// Posicion debajo
+				minas_alrededor++;
+			if (tablero[i + 1][j - 1] == MINA)// Posicion abajo izquierda
+				minas_alrededor++;
+			if (tablero[i][j + 1] == MINA)// Posicion derecha
+				minas_alrededor++;
+			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+				minas_alrededor++;
+			if (tablero[i - 1][j + 1] == MINA)// Posicion arriba derecha
+				minas_alrededor++;
+			if (tablero[i - 1][j] == MINA)// Posicion arriba
+				minas_alrededor++;
+			if (tablero[i - 1][j - 1] == MINA)// Posicion arriba izquierda
+				minas_alrededor++;
+		}
 
+		// Hacer esquinas
+
+		// Esquina superior izquierda
+		if (i == 0 && j == 0) {
+			if (tablero[i][j + 1] == MINA)// Posicion Derecha
+				minas_alrededor++;
+			if (tablero[i + 1][j] == MINA)// Posicion Abajo
+				minas_alrededor++;
+			if (tablero[i + i][j + 1] == MINA)// Posicion Abajo Derecha
+				minas_alrededor++;
+		}
+
+		// Esquina Superior Derecha
+		if (i == 0 && j == 9) {
+			if (tablero[i + 1][j] == MINA)// Posicion debajo
+				minas_alrededor++;
+			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+				minas_alrededor++;
+			if (tablero[i + 1][j - 1] == MINA)// Abajo Izquierda
+				minas_alrededor = MINA;
+		}
+
+		// Esquina Inferior Izquierda
+		if (i == 9 && j == 0) {
+			if (tablero[i][j + 1] == MINA)// Posicion a la derecha
+				minas_alrededor++;
+			if (tablero[i - 1][j] == MINA)// Posicion arriba
+				minas_alrededor++;
+			if (tablero[i - 1][j + 1] == MINA)// Posicion Arriba Derecha
+				minas_alrededor++;
+		}
+
+		// Esquina Inferior Derecha
+		if (i == 9 && j == 9) {
+			if (tablero[i - 1][j] == MINA)// Posicion Derecha
+				minas_alrededor++;
+			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+				minas_alrededor++;
+			if (tablero[i - 1][j - 1] == MINA)// Posicion Arriba Izquierda
+				minas_alrededor++;
+		}
+		// Hacer Fila Arriba
+		if (i == 0 && (j < 9 && j > 0)) {
+			if (tablero[i + 1][j] == MINA)// Posicion Debajo
+				minas_alrededor++;
+			if (tablero[i + 1][j + 1] == MINA)// Posicion Abajo Derecha
+				minas_alrededor++;
+			if (tablero[i + 1][j - 1] == MINA)// Posicion Abajo Izquierda
+				minas_alrededor++;
+			if (tablero[i][j + 1] == MINA)// Posicion Derecha
+				minas_alrededor++;
+			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+				minas_alrededor++;
+		}
+		// Hacer Fila Abajo
+		if (i == 9 && (j > 0 && j < 9)) {
+			if (tablero[i][j++] == MINA)// Posicion Derecha
+				minas_alrededor++;
+			if (tablero[i][j--] == MINA)// POsicion Izquierda
+				minas_alrededor++;
+			if (tablero[i--][j] == MINA)// Posicion Arriba
+				minas_alrededor++;
+			if (tablero[i--][j++] == MINA)// Posicion Arriba Derecha
+				minas_alrededor++;
+			if (tablero[i--][j--] == MINA)// Posicion Arriba Izquierda
+				minas_alrededor++;
+		}
+		// Hacer Columna Izquierda
+		if ((i < 9 && i > 0) && j == 0) {
+			if (tablero[i][j++] == MINA)// Posicion Derecha
+				minas_alrededor++;
+			if (tablero[i--][j] == MINA)// Posicion Arriba
+				minas_alrededor++;
+			if (tablero[i++][j] == MINA)// Posicion Abajo
+				minas_alrededor++;
+			if (tablero[i++][j++] == MINA)// Posicion Abajo Derecha
+				minas_alrededor++;
+			if (tablero[i--][j++] == MINA)// Posicion Arriba Derecha
+				minas_alrededor++;
+		}
+		
+		// Hacer Columna Derecha
+		if ((i < 9 && i > 0) && j == 9) {
+			if(tablero[i][j--]==MINA)//Posicion Izquierda
+				minas_alrededor++;
+			if(tablero[i--][j]==MINA)//Posicion Arriba
+				minas_alrededor++;
+			if(tablero[i++][j]==MINA)//Posicion Abajo
+				minas_alrededor++;
+			if(tablero[i--][j--]==MINA)//Posicion Arriba Izquierda
+				minas_alrededor++;
+			if(tablero[i++][j--]==MINA)//Posicion Abajo Izquierda
+				minas_alrededor++;
+		}
+		return minas_alrededor;
 	}
 
 	/**
@@ -70,8 +202,10 @@ public class ControlJuego {
 	 * 
 	 * @pre : La casilla nunca debe haber sido abierta antes, no es controlado por
 	 *      el ControlJuego. Por lo tanto siempre sumaremos puntos
-	 * @param i: posici贸n verticalmente de la casilla a abrir
-	 * @param j: posici贸n horizontalmente de la casilla a abrir
+	 * @param i:
+	 *            posici贸n verticalmente de la casilla a abrir
+	 * @param j:
+	 *            posici贸n horizontalmente de la casilla a abrir
 	 * @return : Verdadero si no ha explotado una mina. Falso en caso contrario.
 	 */
 	public boolean abrirCasilla(int i, int j) {
@@ -90,6 +224,7 @@ public class ControlJuego {
 	 *         minas.
 	 **/
 	public boolean esFinJuego() {
+		return true;
 	}
 
 	/**
@@ -112,12 +247,14 @@ public class ControlJuego {
 	 * 
 	 * @pre : El tablero tiene que estar ya inicializado, por lo tanto no hace falta
 	 *      calcularlo, s铆mplemente consultarlo
-	 * @param i : posici贸n vertical de la celda.
-	 * @param j : posici贸n horizontal de la cela.
+	 * @param i
+	 *            : posici贸n vertical de la celda.
+	 * @param j
+	 *            : posici贸n horizontal de la cela.
 	 * @return Un entero que representa el n煤mero de minas alrededor de la celda
 	 */
 	public int getMinasAlrededor(int i, int j) {
-
+		return calculoMinasAdjuntas(i, j);
 	}
 
 	/**
@@ -126,6 +263,7 @@ public class ControlJuego {
 	 * @return Un entero con la puntuaci贸n actual
 	 */
 	public int getPuntuacion() {
+		return 0;
 	}
 
 }

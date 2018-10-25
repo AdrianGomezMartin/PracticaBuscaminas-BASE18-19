@@ -17,9 +17,10 @@ import javax.swing.SwingConstants;
 /***
  * 
  * @author adriangomez
+ * 
  *
  */
-
+// cambio
 public class VentanaPrincipal {
 
 	// La ventana principal, en este caso, guarda todos los componentes:
@@ -154,8 +155,10 @@ public class VentanaPrincipal {
 	 * correspondeciaColor): - 0 : negro - 1 : cyan - 2 : verde - 3 : naranja - 4 ó
 	 * más : rojo
 	 * 
-	 * @param i: posición vertical de la celda.
-	 * @param j: posición horizontal de la celda.
+	 * @param i:
+	 *            posición vertical de la celda.
+	 * @param j:
+	 *            posición horizontal de la celda.
 	 */
 	public void mostrarNumMinasAlrededor(int i, int j) {
 		// TODO
@@ -164,9 +167,9 @@ public class VentanaPrincipal {
 	/**
 	 * Muestra una ventana que indica el fin del juego
 	 * 
-	 * @param porExplosion : Un booleano que indica si es final del juego porque ha
-	 *                     explotado una mina (true) o bien porque hemos desactivado
-	 *                     todas (false)
+	 * @param porExplosion
+	 *            : Un booleano que indica si es final del juego porque ha explotado
+	 *            una mina (true) o bien porque hemos desactivado todas (false)
 	 * @post : Todos los botones se desactivan excepto el de volver a iniciar el
 	 *       juego.
 	 */
@@ -206,7 +209,7 @@ public class VentanaPrincipal {
 		// COMPONENTES.
 		ventana.setVisible(true);
 		inicializarComponentes();
-		inicializarListeners();
+		// inicializarListeners();
 	}
 
 }
