@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Random;
-
 /**
  * Clase gestora del tablero de juego. Guarda una matriz de enteros representado
  * el tablero. Si hay una mina en una posición guarda el número -1 Si no hay
@@ -15,16 +12,20 @@ public class ControlJuego {
 	private final static int MINA = -1;
 	final int MINAS_INICIALES = 20;
 	final int LADO_TABLERO = 10;
-
+	private boolean casillaAbierta[][];
+	private boolean esMina[][];
 	private int[][] tablero;
 	private int puntuacion;
 
 	public ControlJuego() {
 		// Creamos el tablero:
 		tablero = new int[LADO_TABLERO][LADO_TABLERO];
-
+		// Creamos matriz de booleanos para comprobar si la casilla se ha abierto
+		casillaAbierta = new boolean[LADO_TABLERO][LADO_TABLERO];
+		esMina = new boolean[LADO_TABLERO][LADO_TABLERO];
 		// Inicializamos una nueva partida
 		inicializarPartida();
+		depurarTablero();
 	}
 	// cambio
 
@@ -52,12 +53,15 @@ public class ControlJuego {
 		// Al final del m�todo hay que guardar el n�mero de minas para las casillas
 		// que no son mina:
 		for (int i = 0; i < tablero.length; i++) {
-			System.out.println();
 			for (int j = 0; j < tablero[i].length; j++) {
+				casillaAbierta[i][j] = false;
+				esMina[i][j] = false;
+				if (tablero[i][j] != MINA) {
+					tablero[i][j] = calculoMinasAdjuntas(i, j);
+				} else {
+					esMina[i][j] = true;
+				}
 
-				 if (tablero[i][j] != MINA) { tablero[i][j] = calculoMinasAdjuntas(i, j); }
-
-				System.out.print(tablero[i][j] + "                 ");
 			}
 		}
 	}
@@ -68,15 +72,13 @@ public class ControlJuego {
 	 * mucho la i y la j valdrán LADO_TABLERO-1. Por lo tanto, como poco la i y la
 	 * j valdrán 0.
 	 * 
-	 * @param i:
-	 *            posición vertical de la casilla a rellenar
-	 * @param j:
-	 *            posición horizontal de la casilla a rellenar
+	 * @param i: posición vertical de la casilla a rellenar
+	 * @param j: posición horizontal de la casilla a rellenar
 	 * @return : El número de minas que hay alrededor de la casilla [i][j]
 	 **/
 	private int calculoMinasAdjuntas(int i, int j) {
 		int minas_alrededor = 0;
-		
+
 		/*
 		 * Si la fila no es la de arriba o la de abajo y la columna no sea derecha ni
 		 * izquierda
@@ -180,18 +182,18 @@ public class ControlJuego {
 			if (tablero[i--][j++] == MINA)// Posicion Arriba Derecha
 				minas_alrededor++;
 		}
-		
+
 		// Hacer Columna Derecha
 		if ((i < 9 && i > 0) && j == 9) {
-			if(tablero[i][j--]==MINA)//Posicion Izquierda
+			if (tablero[i][j--] == MINA)// Posicion Izquierda
 				minas_alrededor++;
-			if(tablero[i--][j]==MINA)//Posicion Arriba
+			if (tablero[i--][j] == MINA)// Posicion Arriba
 				minas_alrededor++;
-			if(tablero[i++][j]==MINA)//Posicion Abajo
+			if (tablero[i++][j] == MINA)// Posicion Abajo
 				minas_alrededor++;
-			if(tablero[i--][j--]==MINA)//Posicion Arriba Izquierda
+			if (tablero[i--][j--] == MINA)// Posicion Arriba Izquierda
 				minas_alrededor++;
-			if(tablero[i++][j--]==MINA)//Posicion Abajo Izquierda
+			if (tablero[i++][j--] == MINA)// Posicion Abajo Izquierda
 				minas_alrededor++;
 		}
 		return minas_alrededor;
@@ -202,14 +204,14 @@ public class ControlJuego {
 	 * 
 	 * @pre : La casilla nunca debe haber sido abierta antes, no es controlado por
 	 *      el ControlJuego. Por lo tanto siempre sumaremos puntos
-	 * @param i:
-	 *            posición verticalmente de la casilla a abrir
-	 * @param j:
-	 *            posición horizontalmente de la casilla a abrir
+	 * @param i: posición verticalmente de la casilla a abrir
+	 * @param j: posición horizontalmente de la casilla a abrir
 	 * @return : Verdadero si no ha explotado una mina. Falso en caso contrario.
 	 */
 	public boolean abrirCasilla(int i, int j) {
 		if (tablero[i][j] != MINA) {// Si No tiene mina
+			puntuacion = puntuacion + tablero[i][j];
+			casillaAbierta[i][j] = true;
 			return true;
 		} else {// Si tiene mina
 			return false;
@@ -224,7 +226,21 @@ public class ControlJuego {
 	 *         minas.
 	 **/
 	public boolean esFinJuego() {
-		return true;
+		int cont = 0;
+		for (int i = 0; i < tablero.length; i++) {
+			for (int j = 0; j < tablero[0].length; i++) {
+				if (casillaAbierta[i][j] && !esMina[i][j]) {
+					cont++;
+				}
+			}
+
+		}
+		if (cont == 80) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	/**
@@ -247,10 +263,8 @@ public class ControlJuego {
 	 * 
 	 * @pre : El tablero tiene que estar ya inicializado, por lo tanto no hace falta
 	 *      calcularlo, símplemente consultarlo
-	 * @param i
-	 *            : posición vertical de la celda.
-	 * @param j
-	 *            : posición horizontal de la cela.
+	 * @param i : posición vertical de la celda.
+	 * @param j : posición horizontal de la cela.
 	 * @return Un entero que representa el número de minas alrededor de la celda
 	 */
 	public int getMinasAlrededor(int i, int j) {
@@ -263,7 +277,7 @@ public class ControlJuego {
 	 * @return Un entero con la puntuación actual
 	 */
 	public int getPuntuacion() {
-		return 0;
+		return puntuacion;
 	}
 
 }
