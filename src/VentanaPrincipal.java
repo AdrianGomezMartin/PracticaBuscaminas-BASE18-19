@@ -22,7 +22,7 @@ import javax.swing.SwingConstants;
  */
 // cambio
 public class VentanaPrincipal {
-
+	int puntuacion;
 	// La ventana principal, en este caso, guarda todos los componentes:
 	JFrame ventana;
 	JPanel panelImagen;
@@ -44,6 +44,7 @@ public class VentanaPrincipal {
 
 	// LA VENTANA GUARDA UN CONTROL DE JUEGO:
 	ControlJuego juego;
+	int i, j;
 
 	// Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
@@ -144,7 +145,41 @@ public class VentanaPrincipal {
 	 * programa
 	 */
 	public void inicializarListeners() {
-		// TODO
+		botonEmpezar.addActionListener((e) -> {
+			juego=getJuego();
+			juego.inicializarPartida();
+			for(int i=0;i<botonesJuego.length;i++) {
+				for(int j=0;j<botonesJuego[i].length;j++) {
+					panelesJuego[i][j].removeAll();
+					refrescarPantalla();
+					panelesJuego[i][j].add(botonesJuego[i][j]);
+				}
+			}
+			refrescarPantalla();
+			pantallaPuntuacion.setText(Integer.toString(0));
+		});
+		for (i = 0; i < botonesJuego.length; i++) {
+			for (j = 0; j < botonesJuego[i].length; j++) {
+				botonesJuego[i][j].addActionListener(new ActionListener() {
+					private int ianonima, janonima;
+					{
+						this.ianonima = i;
+						this.janonima = j;
+					}
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+							if(juego.abrirCasilla(ianonima, janonima)){
+							mostrarNumMinasAlrededor(ianonima, janonima);
+							refrescarPantalla();
+							}else {
+								JOptionPane.showMessageDialog(ventana, "Te ha matado una mina ","Game Over", JOptionPane.ERROR_MESSAGE);
+							}
+						
+					}
+				});
+			}
+		}
 	}
 
 	/**
@@ -155,33 +190,46 @@ public class VentanaPrincipal {
 	 * correspondeciaColor): - 0 : negro - 1 : cyan - 2 : verde - 3 : naranja - 4 ó
 	 * más : rojo
 	 * 
-	 * @param i:
-	 *            posición vertical de la celda.
-	 * @param j:
-	 *            posición horizontal de la celda.
+	 * @param i: posición vertical de la celda.
+	 * @param j: posición horizontal de la celda.
 	 */
 	public void mostrarNumMinasAlrededor(int i, int j) {
-		// TODO
+		JLabel aux;
+		int num = juego.getMinasAlrededor(i, j);
+		puntuacion=puntuacion+num;
+		panelesJuego[i][j].removeAll();
+		aux = new JLabel();
+		aux.setText(Integer.toString(num));
+		if(num>0)
+		aux.setForeground(correspondenciaColores[num]);
+		panelesJuego[i][j].add(aux);
+		pantallaPuntuacion.setText(Integer.toString(puntuacion));
 	}
 
 	/**
 	 * Muestra una ventana que indica el fin del juego
 	 * 
-	 * @param porExplosion
-	 *            : Un booleano que indica si es final del juego porque ha explotado
-	 *            una mina (true) o bien porque hemos desactivado todas (false)
+	 * @param porExplosion : Un booleano que indica si es final del juego porque ha
+	 *                     explotado una mina (true) o bien porque hemos desactivado
+	 *                     todas (false)
 	 * @post : Todos los botones se desactivan excepto el de volver a iniciar el
 	 *       juego.
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
-		// TODO
+		if (porExplosion)
+			JOptionPane.showMessageDialog(ventana, "Ha explotado una mina\nPuntuacion: " + pantallaPuntuacion.getText(),
+					"GAME OVER", JOptionPane.ERROR_MESSAGE);
+		else {
+			JOptionPane.showMessageDialog(ventana, "Has ganado\n Puntuacion","HAS ganado", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
 	/**
 	 * Método que muestra la puntuación por pantalla.
 	 */
 	public void actualizarPuntuacion() {
-		// TODO
+		int puntuacion = juego.getPuntuacion();
+		pantallaPuntuacion.setText(Integer.toString(puntuacion));
 	}
 
 	/**
@@ -209,7 +257,7 @@ public class VentanaPrincipal {
 		// COMPONENTES.
 		ventana.setVisible(true);
 		inicializarComponentes();
-		// inicializarListeners();
+		inicializarListeners();
 	}
 
 }

@@ -39,8 +39,14 @@ public class ControlJuego {
 	 */
 	public void inicializarPartida() {
 		int minasRepartidas = 0;
+		puntuacion=0;
 		// TODO: Repartir minas e inicializar puntaci�n. Si hubiese un tablero
 		// anterior, lo pongo todo a cero para inicializarlo.
+		for(int i=0;i<tablero.length;i++) {
+			for(int j=0;j<tablero[i].length;j++) {
+				tablero[i][j]=0;
+			}
+		}
 		while (minasRepartidas < MINAS_INICIALES) {
 			int minai, minaj;
 			do {
@@ -196,6 +202,9 @@ public class ControlJuego {
 			if (tablero[i++][j--] == MINA)// Posicion Abajo Izquierda
 				minas_alrededor++;
 		}
+		if(tablero[i][j]==MINA) {
+			minas_alrededor=-1;
+		}
 		return minas_alrededor;
 	}
 
@@ -228,7 +237,7 @@ public class ControlJuego {
 	public boolean esFinJuego() {
 		int cont = 0;
 		for (int i = 0; i < tablero.length; i++) {
-			for (int j = 0; j < tablero[0].length; i++) {
+			for (int j = 0; j < tablero[i].length; j++) {
 				if (casillaAbierta[i][j] && !esMina[i][j]) {
 					cont++;
 				}
