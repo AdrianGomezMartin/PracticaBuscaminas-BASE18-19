@@ -57,7 +57,7 @@ public class ControlJuego {
 
 				 if (tablero[i][j] != MINA) { tablero[i][j] = calculoMinasAdjuntas(i, j); }
 
-				System.out.print(tablero[i][j] + "    ");
+				System.out.print(tablero[i][j] + "                 ");
 			}
 		}
 	}
@@ -76,7 +76,7 @@ public class ControlJuego {
 	 **/
 	private int calculoMinasAdjuntas(int i, int j) {
 		int minas_alrededor = 0;
-		// Esto valdria para las casillas que no se aproximan al borde
+		
 		/*
 		 * Si la fila no es la de arriba o la de abajo y la columna no sea derecha ni
 		 * izquierda
@@ -254,7 +254,7 @@ public class ControlJuego {
 	 * @return Un entero que representa el número de minas alrededor de la celda
 	 */
 	public int getMinasAlrededor(int i, int j) {
-		return 0;
+		return calculoMinasAdjuntas(i, j);
 	}
 
 	/**
