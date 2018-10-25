@@ -54,9 +54,9 @@ public class ControlJuego {
 		for (int i = 0; i < tablero.length; i++) {
 			System.out.println();
 			for (int j = 0; j < tablero[i].length; j++) {
-				/*
-				 * if (tablero[i][j] != MINA) { tablero[i][j] = calculoMinasAdjuntas(i, j); }
-				 */
+				
+			 if (tablero[i][j] != MINA) { tablero[i][j] = calculoMinasAdjuntas(i, j); }
+				
 				System.out.print(tablero[i][j] + " ");
 			}
 		}
@@ -79,8 +79,9 @@ public class ControlJuego {
 		if (tablero[i][j] == MINA) {
 			// Fin del juego
 		} else {
-			if ((i != 0 && i != 10) && (j != 0 && j != 10)) {// Mientras la fila no sea la de arriba o la de abajo y la
-																// columna no sea derecha ni izquierda
+			//Esto valdria para las casillas que no se aproximan al borde
+			/*Mientras la fila no sea la de arriba o la de abajo y la columna no sea derecha ni izquierda*/
+			if ((i > 0 &&i < 10) && (j> 0 && j <10)) { 
 				if (tablero[i + 1][j + 1] == MINA)// posicion abajo a la derecha
 					minas_alrededor++;
 				if (tablero[i + 1][j] == MINA)// Posicion debajo
@@ -98,7 +99,18 @@ public class ControlJuego {
 				if (tablero[i - 1][j - 1] == MINA)// Posicion arriba izquierda
 					minas_alrededor++;
 			}
+			
+			//Hacer esquinas
+			
+			//Hacer Fila Arriba 
+			
+			//Hacer Fila Abajo
+			
+			//Hacer Columna Izquierda
+			
+			//Hacer Columna Derecha
 		}
+		return minas_alrededor;
 	}
 
 	/**
