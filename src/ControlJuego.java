@@ -15,7 +15,7 @@ public class ControlJuego {
 	private boolean casillaAbierta[][];
 	private boolean esMina[][];
 	private int[][] tablero;
-	private int puntuacion;
+	private int puntuacion,puntuacionTotal;
 
 	public ControlJuego() {
 		// Creamos el tablero:
@@ -39,12 +39,12 @@ public class ControlJuego {
 	 */
 	public void inicializarPartida() {
 		int minasRepartidas = 0;
-		puntuacion=0;
+		puntuacionTotal=0;
 		// TODO: Repartir minas e inicializar puntaci�n. Si hubiese un tablero
 		// anterior, lo pongo todo a cero para inicializarlo.
-		for(int i=0;i<tablero.length;i++) {
-			for(int j=0;j<tablero[i].length;j++) {
-				tablero[i][j]=0;
+		for (int i = 0; i < tablero.length; i++) {
+			for (int j = 0; j < tablero[i].length; j++) {
+				tablero[i][j] = 0;
 			}
 		}
 		while (minasRepartidas < MINAS_INICIALES) {
@@ -58,12 +58,14 @@ public class ControlJuego {
 		}
 		// Al final del m�todo hay que guardar el n�mero de minas para las casillas
 		// que no son mina:
+		
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[i].length; j++) {
 				casillaAbierta[i][j] = false;
 				esMina[i][j] = false;
 				if (tablero[i][j] != MINA) {
 					tablero[i][j] = calculoMinasAdjuntas(i, j);
+					puntuacionTotal=puntuacionTotal+tablero[i][j];
 				} else {
 					esMina[i][j] = true;
 				}
@@ -89,121 +91,122 @@ public class ControlJuego {
 		 * Si la fila no es la de arriba o la de abajo y la columna no sea derecha ni
 		 * izquierda
 		 */
-		if ((i > 0 && i < 9) && (j > 0 && j < 9)) {
-			if (tablero[i + 1][j + 1] == MINA)// posicion abajo a la derecha
-				minas_alrededor++;
-			if (tablero[i + 1][j] == MINA)// Posicion debajo
-				minas_alrededor++;
-			if (tablero[i + 1][j - 1] == MINA)// Posicion abajo izquierda
-				minas_alrededor++;
-			if (tablero[i][j + 1] == MINA)// Posicion derecha
-				minas_alrededor++;
-			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
-				minas_alrededor++;
-			if (tablero[i - 1][j + 1] == MINA)// Posicion arriba derecha
-				minas_alrededor++;
-			if (tablero[i - 1][j] == MINA)// Posicion arriba
-				minas_alrededor++;
-			if (tablero[i - 1][j - 1] == MINA)// Posicion arriba izquierda
-				minas_alrededor++;
-		}
+		if (tablero[i][j] == MINA) {
+			minas_alrededor = -1;
+		} else {
+			if ((i > 0 && i < 9) && (j > 0 && j < 9)) {
+				if (tablero[i + 1][j + 1] == MINA)// posicion abajo a la derecha
+					minas_alrededor++;
+				if (tablero[i + 1][j] == MINA)// Posicion debajo
+					minas_alrededor++;
+				if (tablero[i + 1][j - 1] == MINA)// Posicion abajo izquierda
+					minas_alrededor++;
+				if (tablero[i][j + 1] == MINA)// Posicion derecha
+					minas_alrededor++;
+				if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+					minas_alrededor++;
+				if (tablero[i - 1][j + 1] == MINA)// Posicion arriba derecha
+					minas_alrededor++;
+				if (tablero[i - 1][j] == MINA)// Posicion arriba
+					minas_alrededor++;
+				if (tablero[i - 1][j - 1] == MINA)// Posicion arriba izquierda
+					minas_alrededor++;
+			}
 
-		// Hacer esquinas
+			// Hacer esquinas
 
-		// Esquina superior izquierda
-		if (i == 0 && j == 0) {
-			if (tablero[i][j + 1] == MINA)// Posicion Derecha
-				minas_alrededor++;
-			if (tablero[i + 1][j] == MINA)// Posicion Abajo
-				minas_alrededor++;
-			if (tablero[i + i][j + 1] == MINA)// Posicion Abajo Derecha
-				minas_alrededor++;
-		}
+			// Esquina superior izquierda
+			if (i == 0 && j == 0) {
+				if (tablero[i][j + 1] == MINA)// Posicion Derecha
+					minas_alrededor++;
+				if (tablero[i + 1][j] == MINA)// Posicion Abajo
+					minas_alrededor++;
+				if (tablero[i + i][j + 1] == MINA)// Posicion Abajo Derecha
+					minas_alrededor++;
+			}
 
-		// Esquina Superior Derecha
-		if (i == 0 && j == 9) {
-			if (tablero[i + 1][j] == MINA)// Posicion debajo
-				minas_alrededor++;
-			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
-				minas_alrededor++;
-			if (tablero[i + 1][j - 1] == MINA)// Abajo Izquierda
-				minas_alrededor = MINA;
-		}
+			// Esquina Superior Derecha
+			if (i == 0 && j == 9) {
+				if (tablero[i + 1][j] == MINA)// Posicion debajo
+					minas_alrededor++;
+				if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+					minas_alrededor++;
+				if (tablero[i + 1][j - 1] == MINA)// Abajo Izquierda
+					minas_alrededor = MINA;
+			}
 
-		// Esquina Inferior Izquierda
-		if (i == 9 && j == 0) {
-			if (tablero[i][j + 1] == MINA)// Posicion a la derecha
-				minas_alrededor++;
-			if (tablero[i - 1][j] == MINA)// Posicion arriba
-				minas_alrededor++;
-			if (tablero[i - 1][j + 1] == MINA)// Posicion Arriba Derecha
-				minas_alrededor++;
-		}
+			// Esquina Inferior Izquierda
+			if (i == 9 && j == 0) {
+				if (tablero[i][j + 1] == MINA)// Posicion a la derecha
+					minas_alrededor++;
+				if (tablero[i - 1][j] == MINA)// Posicion arriba
+					minas_alrededor++;
+				if (tablero[i - 1][j + 1] == MINA)// Posicion Arriba Derecha
+					minas_alrededor++;
+			}
 
-		// Esquina Inferior Derecha
-		if (i == 9 && j == 9) {
-			if (tablero[i - 1][j] == MINA)// Posicion Derecha
-				minas_alrededor++;
-			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
-				minas_alrededor++;
-			if (tablero[i - 1][j - 1] == MINA)// Posicion Arriba Izquierda
-				minas_alrededor++;
-		}
-		// Hacer Fila Arriba
-		if (i == 0 && (j < 9 && j > 0)) {
-			if (tablero[i + 1][j] == MINA)// Posicion Debajo
-				minas_alrededor++;
-			if (tablero[i + 1][j + 1] == MINA)// Posicion Abajo Derecha
-				minas_alrededor++;
-			if (tablero[i + 1][j - 1] == MINA)// Posicion Abajo Izquierda
-				minas_alrededor++;
-			if (tablero[i][j + 1] == MINA)// Posicion Derecha
-				minas_alrededor++;
-			if (tablero[i][j - 1] == MINA)// Posicion Izquierda
-				minas_alrededor++;
-		}
-		// Hacer Fila Abajo
-		if (i == 9 && (j > 0 && j < 9)) {
-			if (tablero[i][j++] == MINA)// Posicion Derecha
-				minas_alrededor++;
-			if (tablero[i][j--] == MINA)// POsicion Izquierda
-				minas_alrededor++;
-			if (tablero[i--][j] == MINA)// Posicion Arriba
-				minas_alrededor++;
-			if (tablero[i--][j++] == MINA)// Posicion Arriba Derecha
-				minas_alrededor++;
-			if (tablero[i--][j--] == MINA)// Posicion Arriba Izquierda
-				minas_alrededor++;
-		}
-		// Hacer Columna Izquierda
-		if ((i < 9 && i > 0) && j == 0) {
-			if (tablero[i][j++] == MINA)// Posicion Derecha
-				minas_alrededor++;
-			if (tablero[i--][j] == MINA)// Posicion Arriba
-				minas_alrededor++;
-			if (tablero[i++][j] == MINA)// Posicion Abajo
-				minas_alrededor++;
-			if (tablero[i++][j++] == MINA)// Posicion Abajo Derecha
-				minas_alrededor++;
-			if (tablero[i--][j++] == MINA)// Posicion Arriba Derecha
-				minas_alrededor++;
-		}
+			// Esquina Inferior Derecha
+			if (i == 9 && j == 9) {
+				if (tablero[i - 1][j] == MINA)// Posicion Derecha
+					minas_alrededor++;
+				if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+					minas_alrededor++;
+				if (tablero[i - 1][j - 1] == MINA)// Posicion Arriba Izquierda
+					minas_alrededor++;
+			}
+			// Hacer Fila Arriba
+			if (i == 0 && (j < 9 && j > 0)) {
+				if (tablero[i + 1][j] == MINA)// Posicion Debajo
+					minas_alrededor++;
+				if (tablero[i + 1][j + 1] == MINA)// Posicion Abajo Derecha
+					minas_alrededor++;
+				if (tablero[i + 1][j - 1] == MINA)// Posicion Abajo Izquierda
+					minas_alrededor++;
+				if (tablero[i][j + 1] == MINA)// Posicion Derecha
+					minas_alrededor++;
+				if (tablero[i][j - 1] == MINA)// Posicion Izquierda
+					minas_alrededor++;
+			}
+			// Hacer Fila Abajo
+			if (i == 9 && (j > 0 && j < 9)) {
+				if (tablero[i][j++] == MINA)// Posicion Derecha
+					minas_alrededor++;
+				if (tablero[i][j--] == MINA)// POsicion Izquierda
+					minas_alrededor++;
+				if (tablero[i--][j] == MINA)// Posicion Arriba
+					minas_alrededor++;
+				if (tablero[i--][j++] == MINA)// Posicion Arriba Derecha
+					minas_alrededor++;
+				if (tablero[i--][j--] == MINA)// Posicion Arriba Izquierda
+					minas_alrededor++;
+			}
+			// Hacer Columna Izquierda
+			if ((i < 9 && i > 0) && j == 0) {
+				if (tablero[i][j++] == MINA)// Posicion Derecha
+					minas_alrededor++;
+				if (tablero[i--][j] == MINA)// Posicion Arriba
+					minas_alrededor++;
+				if (tablero[i++][j] == MINA)// Posicion Abajo
+					minas_alrededor++;
+				if (tablero[i++][j++] == MINA)// Posicion Abajo Derecha
+					minas_alrededor++;
+				if (tablero[i--][j++] == MINA)// Posicion Arriba Derecha
+					minas_alrededor++;
+			}
 
-		// Hacer Columna Derecha
-		if ((i < 9 && i > 0) && j == 9) {
-			if (tablero[i][j--] == MINA)// Posicion Izquierda
-				minas_alrededor++;
-			if (tablero[i--][j] == MINA)// Posicion Arriba
-				minas_alrededor++;
-			if (tablero[i++][j] == MINA)// Posicion Abajo
-				minas_alrededor++;
-			if (tablero[i--][j--] == MINA)// Posicion Arriba Izquierda
-				minas_alrededor++;
-			if (tablero[i++][j--] == MINA)// Posicion Abajo Izquierda
-				minas_alrededor++;
-		}
-		if(tablero[i][j]==MINA) {
-			minas_alrededor=-1;
+			// Hacer Columna Derecha
+			if ((i < 9 && i > 0) && j == 9) {
+				if (tablero[i][j--] == MINA)// Posicion Izquierda
+					minas_alrededor++;
+				if (tablero[i--][j] == MINA)// Posicion Arriba
+					minas_alrededor++;
+				if (tablero[i++][j] == MINA)// Posicion Abajo
+					minas_alrededor++;
+				if (tablero[i--][j--] == MINA)// Posicion Arriba Izquierda
+					minas_alrededor++;
+				if (tablero[i++][j--] == MINA)// Posicion Abajo Izquierda
+					minas_alrededor++;
+			}
 		}
 		return minas_alrededor;
 	}
@@ -235,16 +238,8 @@ public class ControlJuego {
 	 *         minas.
 	 **/
 	public boolean esFinJuego() {
-		int cont = 0;
-		for (int i = 0; i < tablero.length; i++) {
-			for (int j = 0; j < tablero[i].length; j++) {
-				if (casillaAbierta[i][j] && !esMina[i][j]) {
-					cont++;
-				}
-			}
-
-		}
-		if (cont == 80) {
+		
+		if (puntuacion>= puntuacionTotal) {//SI ha cosegido el maximo de puntos posibles
 			return true;
 		} else {
 			return false;
@@ -264,7 +259,7 @@ public class ControlJuego {
 			}
 			System.out.println();
 		}
-		System.out.println("\nPuntuación: " + puntuacion);
+		System.out.println("\nPuntuación: " + puntuacionTotal);
 	}
 
 	/**

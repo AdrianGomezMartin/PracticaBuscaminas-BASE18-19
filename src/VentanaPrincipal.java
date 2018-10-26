@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 // cambio
 public class VentanaPrincipal {
 	int puntuacion;
+	boolean porMina;
 	// La ventana principal, en este caso, guarda todos los componentes:
 	JFrame ventana;
 	JPanel panelImagen;
@@ -131,6 +132,7 @@ public class VentanaPrincipal {
 			for (int j = 0; j < botonesJuego[i].length; j++) {
 				botonesJuego[i][j] = new JButton("-");
 				panelesJuego[i][j].add(botonesJuego[i][j]);
+				//botonesJuego[i][j].setText(Integer.toString(juego.getMinasAlrededor(i, j)));
 			}
 		}
 
@@ -145,18 +147,21 @@ public class VentanaPrincipal {
 	 * programa
 	 */
 	public void inicializarListeners() {
+		porMina = false;
 		botonEmpezar.addActionListener((e) -> {
-			juego=getJuego();
+			puntuacion = 0;
+			juego = getJuego();
 			juego.inicializarPartida();
-			for(int i=0;i<botonesJuego.length;i++) {
-				for(int j=0;j<botonesJuego[i].length;j++) {
+			for (int i = 0; i < botonesJuego.length; i++) {
+				for (int j = 0; j < botonesJuego[i].length; j++) {
 					panelesJuego[i][j].removeAll();
 					refrescarPantalla();
 					panelesJuego[i][j].add(botonesJuego[i][j]);
+					botonesJuego[i][j].setEnabled(true);
 				}
 			}
 			refrescarPantalla();
-			pantallaPuntuacion.setText(Integer.toString(0));
+			actualizarPuntuacion();
 		});
 		for (i = 0; i < botonesJuego.length; i++) {
 			for (j = 0; j < botonesJuego[i].length; j++) {
@@ -169,13 +174,16 @@ public class VentanaPrincipal {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-							if(juego.abrirCasilla(ianonima, janonima)){
+						if (juego.abrirCasilla(ianonima, janonima)) {
 							mostrarNumMinasAlrededor(ianonima, janonima);
+							mostrarFinJuego(porMina);
 							refrescarPantalla();
-							}else {
-								JOptionPane.showMessageDialog(ventana, "Te ha matado una mina ","Game Over", JOptionPane.ERROR_MESSAGE);
-							}
-						
+						} else if(!juego.abrirCasilla(ianonima, janonima)) {
+							porMina = true;
+							mostrarFinJuego(porMina);
+							porMina=false;
+						}
+
 					}
 				});
 			}
@@ -196,14 +204,15 @@ public class VentanaPrincipal {
 	public void mostrarNumMinasAlrededor(int i, int j) {
 		JLabel aux;
 		int num = juego.getMinasAlrededor(i, j);
-		puntuacion=puntuacion+num;
+		puntuacion = juego.getPuntuacion() + num;
 		panelesJuego[i][j].removeAll();
 		aux = new JLabel();
 		aux.setText(Integer.toString(num));
-		if(num>0)
-		aux.setForeground(correspondenciaColores[num]);
+		aux.setHorizontalAlignment(JLabel.CENTER);
+		if (num > 0)
+			aux.setForeground(correspondenciaColores[num]);
 		panelesJuego[i][j].add(aux);
-		pantallaPuntuacion.setText(Integer.toString(puntuacion));
+		actualizarPuntuacion();
 	}
 
 	/**
@@ -216,11 +225,17 @@ public class VentanaPrincipal {
 	 *       juego.
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
-		if (porExplosion)
+		if (juego.esFinJuego()) {
+			JOptionPane.showMessageDialog(ventana, "HAS GANADO HAS ABIERO TODAS LAS CASILLAS QUE NO SON MINA",
+					"PARTIDA GANADA", JOptionPane.INFORMATION_MESSAGE);
+		} if (porExplosion) {
 			JOptionPane.showMessageDialog(ventana, "Ha explotado una mina\nPuntuacion: " + pantallaPuntuacion.getText(),
 					"GAME OVER", JOptionPane.ERROR_MESSAGE);
-		else {
-			JOptionPane.showMessageDialog(ventana, "Has ganado\n Puntuacion","HAS ganado", JOptionPane.INFORMATION_MESSAGE);
+			for (int i = 0; i < botonesJuego.length; i++) {
+				for (int j = 0; j < botonesJuego[i].length; j++) {
+					botonesJuego[i][j].setEnabled(false);
+				}
+			}
 		}
 	}
 
