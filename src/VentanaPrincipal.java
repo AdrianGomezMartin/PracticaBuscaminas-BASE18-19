@@ -22,7 +22,7 @@ import javax.swing.SwingConstants;
  */
 // cambio
 public class VentanaPrincipal {
-	int puntuacion;
+
 	boolean porMina;
 	// La ventana principal, en este caso, guarda todos los componentes:
 	JFrame ventana;
@@ -132,7 +132,7 @@ public class VentanaPrincipal {
 			for (int j = 0; j < botonesJuego[i].length; j++) {
 				botonesJuego[i][j] = new JButton("-");
 				panelesJuego[i][j].add(botonesJuego[i][j]);
-				//botonesJuego[i][j].setText(Integer.toString(juego.getMinasAlrededor(i, j)));
+				// botonesJuego[i][j].setText(Integer.toString(juego.getMinasAlrededor(i, j)));
 			}
 		}
 
@@ -147,11 +147,12 @@ public class VentanaPrincipal {
 	 * programa
 	 */
 	public void inicializarListeners() {
-		porMina = false;
+
 		botonEmpezar.addActionListener((e) -> {
-			puntuacion = 0;
+
 			juego = getJuego();
 			juego.inicializarPartida();
+
 			for (int i = 0; i < botonesJuego.length; i++) {
 				for (int j = 0; j < botonesJuego[i].length; j++) {
 					panelesJuego[i][j].removeAll();
@@ -176,12 +177,14 @@ public class VentanaPrincipal {
 					public void actionPerformed(ActionEvent e) {
 						if (juego.abrirCasilla(ianonima, janonima)) {
 							mostrarNumMinasAlrededor(ianonima, janonima);
+							porMina = false;
 							mostrarFinJuego(porMina);
 							refrescarPantalla();
-						} else if(!juego.abrirCasilla(ianonima, janonima)) {
+							actualizarPuntuacion();
+						} else if (!juego.abrirCasilla(ianonima, janonima)) {
 							porMina = true;
 							mostrarFinJuego(porMina);
-							porMina=false;
+
 						}
 
 					}
@@ -198,13 +201,14 @@ public class VentanaPrincipal {
 	 * correspondeciaColor): - 0 : negro - 1 : cyan - 2 : verde - 3 : naranja - 4 ó
 	 * más : rojo
 	 * 
-	 * @param i: posición vertical de la celda.
-	 * @param j: posición horizontal de la celda.
+	 * @param i:
+	 *            posición vertical de la celda.
+	 * @param j:
+	 *            posición horizontal de la celda.
 	 */
 	public void mostrarNumMinasAlrededor(int i, int j) {
 		JLabel aux;
 		int num = juego.getMinasAlrededor(i, j);
-		puntuacion = juego.getPuntuacion() + num;
 		panelesJuego[i][j].removeAll();
 		aux = new JLabel();
 		aux.setText(Integer.toString(num));
@@ -212,15 +216,14 @@ public class VentanaPrincipal {
 		if (num > 0)
 			aux.setForeground(correspondenciaColores[num]);
 		panelesJuego[i][j].add(aux);
-		actualizarPuntuacion();
 	}
 
 	/**
 	 * Muestra una ventana que indica el fin del juego
 	 * 
-	 * @param porExplosion : Un booleano que indica si es final del juego porque ha
-	 *                     explotado una mina (true) o bien porque hemos desactivado
-	 *                     todas (false)
+	 * @param porExplosion
+	 *            : Un booleano que indica si es final del juego porque ha explotado
+	 *            una mina (true) o bien porque hemos desactivado todas (false)
 	 * @post : Todos los botones se desactivan excepto el de volver a iniciar el
 	 *       juego.
 	 */
@@ -228,7 +231,8 @@ public class VentanaPrincipal {
 		if (juego.esFinJuego()) {
 			JOptionPane.showMessageDialog(ventana, "HAS GANADO HAS ABIERO TODAS LAS CASILLAS QUE NO SON MINA",
 					"PARTIDA GANADA", JOptionPane.INFORMATION_MESSAGE);
-		} if (porExplosion) {
+		}
+		if (porExplosion) {
 			JOptionPane.showMessageDialog(ventana, "Ha explotado una mina\nPuntuacion: " + pantallaPuntuacion.getText(),
 					"GAME OVER", JOptionPane.ERROR_MESSAGE);
 			for (int i = 0; i < botonesJuego.length; i++) {
@@ -243,8 +247,7 @@ public class VentanaPrincipal {
 	 * Método que muestra la puntuación por pantalla.
 	 */
 	public void actualizarPuntuacion() {
-		int puntuacion = juego.getPuntuacion();
-		pantallaPuntuacion.setText(Integer.toString(puntuacion));
+		pantallaPuntuacion.setText(Integer.toString(juego.getPuntuacion()));
 	}
 
 	/**
