@@ -5,7 +5,9 @@
  * la partida
  * 
  * @author adriangomezmartin
- *
+ * @since 29/10/2018
+ * @version 1.0
+ * 
  */
 public class ControlJuego {
 
@@ -268,6 +270,8 @@ public class ControlJuego {
 	 * @param j
 	 *            : posición horizontal de la cela.
 	 * @return Un entero que representa el número de minas alrededor de la celda
+	 * 
+	 * @see  #calculoMinasAdjuntas
 	 */
 	public int getMinasAlrededor(int i, int j) {
 		return calculoMinasAdjuntas(i, j);

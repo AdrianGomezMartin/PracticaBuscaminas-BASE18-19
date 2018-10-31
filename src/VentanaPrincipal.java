@@ -18,9 +18,12 @@ import javax.swing.SwingConstants;
  * 
  * @author adriangomez
  * 
+ * Clase que gestiona la Interfaz Grafica del Buscaminas
+ * 
+ * @link {@link #inicializar()}
  *
  */
-// cambio
+
 public class VentanaPrincipal {
 
 	boolean porMina;
@@ -48,6 +51,7 @@ public class VentanaPrincipal {
 	int i, j;
 
 	// Constructor, marca el tamaño y el cierre del frame
+	
 	public VentanaPrincipal() {
 		ventana = new JFrame();
 		ventana.setBounds(100, 100, 700, 500);
@@ -269,6 +273,9 @@ public class VentanaPrincipal {
 
 	/**
 	 * Método para inicializar el programa
+	 * {@code 	ventana.setVisible(true);
+				inicializarComponentes();
+				inicializarListeners();}
 	 */
 	public void inicializar() {
 		// IMPORTANTE, PRIMERO HACEMOS LA VENTANA VISIBLE Y LUEGO INICIALIZAMOS LOS
